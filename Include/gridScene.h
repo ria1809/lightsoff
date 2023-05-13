@@ -11,7 +11,6 @@ class BoxScene {
 public:
     BoxScene();
     void run();
-    void checkWin();
 
 private:
     Canvas m_canvas;
@@ -26,7 +25,6 @@ private:
     std::uniform_int_distribution<> m_dis;
     MyMouseListener m_mouseListener;
     std::shared_ptr<Mesh> mesh;
-    Color color;
 
 
     void createBoxes();

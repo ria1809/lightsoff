@@ -8,12 +8,12 @@ using namespace threepp;
 
 class play{
 public:
-    void toggle();
-    void win();
+    void toggleAdjacent(int i, int j,std::vector<std::vector<std::shared_ptr<Mesh>>> m_boxes);
+    void win(std::vector<std::vector<std::shared_ptr<Mesh>>> m_boxes);
 private:
-    std::vector<std::vector<std::shared_ptr<Mesh>>> m_boxes;
     std::shared_ptr<Mesh> mesh;
     Color color;
+
 
 };
 

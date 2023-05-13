@@ -58,17 +58,17 @@ void BoxScene::changeBoxColors() {
 
 
 void BoxScene::animate() {
-    m_canvas.animate([&](float dt) -> void {
+    m_canvas.animate([&](float dt)-> void {
         std::cout<< m_mouseListener.mouseClick() << std::endl;
-    },
-        m_renderer.render(m_scene, m_camera));
+    }),
+        m_renderer.render(m_scene, m_camera);
     }
 void BoxScene::run() {
     play playObject;
     createBoxes();
     changeBoxColors();
-    playObject.toggle();
-    playObject.win();
+    playObject.toggleAdjacent();
+    //playObject.win();
     animate();
 }
 

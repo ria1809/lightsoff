@@ -10,7 +10,6 @@
 
 using namespace threepp;
 
-// MyMouseListener has been copied from threepp/examples/objects/decal.cpp
 
 class MyMouseListener: public MouseListener {
 

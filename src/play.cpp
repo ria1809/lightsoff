@@ -1,10 +1,9 @@
 #include "play.h"
-#include "gridScene.h"
 #include "threepp/threepp.hpp"
 
 using namespace threepp;
 
-void play::toggle(){
+void play::toggleAdjacent(int i, int j,std::vector<std::vector<std::shared_ptr<Mesh>>> m_boxes) {
     if (color == Color::yellow)
         color = Color::white;
     else
@@ -12,9 +11,29 @@ void play::toggle(){
 
     auto material = MeshBasicMaterial::create();
     material->color = color;
-    mesh->setMaterial(material);
+    m_boxes[i][j]->setMaterial(material);
+
+    if (i - 1 >= 0) {
+        auto adjacentBox = m_boxes[i - 1][j];
+        adjacentBox->setMaterial(material);
+    }
+
+    if (i + 1 < m_boxes.size()) {
+        auto adjacentBox = m_boxes[i + 1][j];
+        adjacentBox->setMaterial(material);
+    }
+
+    if (j - 1 >= 0) {
+        auto adjacentBox = m_boxes[i][j - 1];
+        adjacentBox->setMaterial(material);
+    }
+
+    if (j + 1 < m_boxes[0].size()) {
+        auto adjacentBox = m_boxes[i][j + 1];
+        adjacentBox->setMaterial(material);
+    }
 }
-void play::win(){
+void play::win(std::vector<std::vector<std::shared_ptr<Mesh>>> m_boxes){
     // Check if all boxes are white
     bool allWhite = true;
     for (int i = 0; i < 5; i++) {
