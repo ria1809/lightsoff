@@ -1,11 +1,10 @@
 #include "gridScene.h"
 #include "mouseEvent.h"
-#include "play.h"
 #include <iostream>
 using namespace threepp;
 
 BoxScene::BoxScene() :
-        m_canvas(),
+        m_canvas(Canvas::Parameters().size({600, 500})),
         m_renderer(m_canvas),
         m_scene(Scene::create()),
         m_camera(OrthographicCamera::create(0, 6, 0, 6 , 0.1, 1000)),
@@ -13,7 +12,7 @@ BoxScene::BoxScene() :
         m_material(MeshBasicMaterial::create()),
         m_yellowMaterial(MeshBasicMaterial::create()),
         m_whiteMaterial(MeshBasicMaterial::create()),
-        m_boxes(5, std::vector<std::shared_ptr<Mesh>>(5)),
+        m_boxes(SIZE, std::vector<Box>(SIZE)),
         m_mouseListener(m_canvas),
         m_rd(),
         m_gen(m_rd()),
@@ -21,36 +20,50 @@ BoxScene::BoxScene() :
 {
     m_canvas.addMouseListener(&m_mouseListener);
     m_renderer.setClearColor(Color::black);
-    m_camera->position.set(0,0,1);
-    m_camera->lookAt(0,0,0);
-    m_material->color.setRGB(1, 1, 1);
+    m_camera->position.set(0, 0,1);
+    m_camera->lookAt(0, 0,0);
+    m_material->color = Color::yellow;
     m_whiteMaterial->color.setRGB(1, 1, 1);
     m_yellowMaterial->color.setRGB(1, 1, 0);
 
+    m_canvas.onWindowResize([&](WindowSize size) {
+        m_canvas.setSize({600, 500});
+    });
 }
 
-
 void BoxScene::createBoxes() {
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            auto box = Mesh::create(m_geometry, m_material);
-            box->position.set(0.1f + box->scale.x*0.5f + i*(box->scale.x+0.1f), 0.1f + box->scale.x*0.5f + j*(box->scale.y+0.1f),0); // set the position of the box
-            m_boxes[i][j]=box; // assign the box
-            m_scene->add(box); // add the box to the scene
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            Box box;
+            auto mat = MeshBasicMaterial::create();
+            mat->color = Color::yellow;
+            auto _mesh = Mesh::create(m_geometry, mat); // x
+            _mesh->position.set(    0.1f + _mesh->scale.x*0.5f + static_cast<float>(j)*(_mesh->scale.x+0.1f), // y
+                                    0.1f + _mesh->scale.x*0.5f + static_cast<float>(i)*(_mesh->scale.y+0.1f), // z
+                                    0.0f); // set the position of the box
+            box.mesh = _mesh;
+            m_boxes[i][j] = box; // assign the box
+            m_scene->add(m_boxes[i][j].mesh); // add the box to the scene
         }
     }
 }
+void BoxScene::checkPattern(){
+    for (int i=4; i< SIZE;i++){
+        for(int j = 0; j < SIZE; i++)
+    }
+}
 
-void BoxScene::changeBoxColors() {
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
+void BoxScene::changeBoxColors() { // This should be called randomizeBoxColors
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
             // Randomly decide whether to change the color of this box to yellow
-            if (m_dis(m_gen) == 0) {
-                auto box = m_boxes[i][j];
-                auto yellowMaterial = MeshBasicMaterial::create();
-                yellowMaterial->color.setRGB(1, 1, 0);
-                box->setMaterial(yellowMaterial);
 
+            int num = math::randomInRange(0, 1);
+
+            if (num == 1) {
+                m_boxes[i][j].setColor(Color::yellow);
+            } else {
+                m_boxes[i][j].setColor(Color::white);
             }
         }
     }
@@ -58,17 +71,91 @@ void BoxScene::changeBoxColors() {
 
 
 void BoxScene::animate() {
-    m_canvas.animate([&](float dt)-> void {
-        std::cout<< m_mouseListener.mouseClick() << std::endl;
-    }),
+    m_canvas.animate([&](float dt) {
+        if (m_mouseListener.mouseDown) {
+            m_mouseListener.mouseDown = false;
+            moves++;
+            Vector2 index = getBoxAtPosition(m_mouseListener.realPos);
+            if (index.x != -1) {
+                toggle(index);
+            }
+            if (checkWin()) {
+                std::cout << "Congratulations, you won in " << moves << " moves!" << std::endl;
+                exit(0);
+            }
+        }
+
         m_renderer.render(m_scene, m_camera);
-    }
+    });
+}
+
 void BoxScene::run() {
-    play playObject;
     createBoxes();
     changeBoxColors();
-    playObject.toggleAdjacent();
-    //playObject.win();
     animate();
+}
+
+Vector2 BoxScene::getBoxAtPosition(Vector2 pos) {
+
+    Vector2 boxSizePixels = {100, 83};
+    Vector2 spacingSizePixels = {10, 8};
+
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+
+            Vector2 boxCanvasPosMin = {
+                    spacingSizePixels.x * static_cast<float>(1+j) + boxSizePixels.x * static_cast<float>(j), // x
+                    spacingSizePixels.y * static_cast<float>(1+i) + boxSizePixels.y * static_cast<float>(i) // y
+            };
+
+            Vector2 boxCanvasPosMax = {
+                    spacingSizePixels.x * static_cast<float>(1+j) + boxSizePixels.x * static_cast<float>(j+1), // x
+                    spacingSizePixels.y * static_cast<float>(1+i) + boxSizePixels.y * static_cast<float>(i+1) // y
+            };
+
+
+            if (pos.x > boxCanvasPosMin.x && pos.x < boxCanvasPosMax.x && pos.y > boxCanvasPosMin.y && pos.y < boxCanvasPosMax.y) {
+                return Vector2{i, j};
+            }
+        }
+    }
+
+    std::cout << pos << std::endl;
+
+    return Vector2{-1, -1};
+}
+void BoxScene::toggle(Vector2 indexes) {
+
+    int i = static_cast<int>(indexes.x);
+    int j = static_cast<int>(indexes.y);
+
+    //std::cout << i << " <- i | j -> " << j << std::endl;
+
+    if (i >= 0 && i < SIZE && j >= 0 && j < SIZE) {
+        m_boxes[i][j].toggle();
+        if (i > 0)
+            m_boxes[i - 1][j].toggle();
+        if (i < SIZE - 1)
+            m_boxes[i + 1][j].toggle();
+        if (j > 0)
+            m_boxes[i][j - 1].toggle();
+        if (j < SIZE - 1)
+            m_boxes[i][j + 1].toggle();
+    }
+
+}
+
+bool BoxScene::checkWin() {
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (m_boxes[i][j].color == Color::yellow) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 

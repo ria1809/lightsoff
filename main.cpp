@@ -1,16 +1,11 @@
-
-#include "gridMap.h"
-#include "threepp/threepp.hpp"
-#include "gridScene.h"
-
-
+#include "Include/gridScene.h"
 
 using namespace threepp;
-using namespace std;
 
 int main() {
-    BoxScene BoxScene;
-    BoxScene.run();
 
-            return 0;
-        }
+    BoxScene boxScene;
+    boxScene.run();
+
+    return 0;
+}
