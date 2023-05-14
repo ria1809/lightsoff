@@ -17,6 +17,7 @@ BoxScene::BoxScene() :
         m_rd(),
         m_gen(m_rd()),
         m_dis(0, 1)
+
 {
     m_canvas.addMouseListener(&m_mouseListener);
     m_renderer.setClearColor(Color::black);
@@ -47,25 +48,69 @@ void BoxScene::createBoxes() {
         }
     }
 }
-void BoxScene::checkPattern(){
-    for (int i=4; i< SIZE;i++){
-        for(int j = 0; j < SIZE; i++)
-    }
-}
 
-void BoxScene::changeBoxColors() { // This should be called randomizeBoxColors
+
+void BoxScene::randomiseYellowBoxes() {
+    // Generate random box colors
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            // Randomly decide whether to change the color of this box to yellow
-
             int num = math::randomInRange(0, 1);
-
             if (num == 1) {
                 m_boxes[i][j].setColor(Color::yellow);
             } else {
                 m_boxes[i][j].setColor(Color::white);
             }
         }
+    }
+}
+std::vector<bool> BoxScene::chaseYellowBoxes() {
+    // Chase down yellow boxes to the bottom row
+    for (int j = 0; j < SIZE; j++) {
+        int row = SIZE - 1;
+        while (row >= 0 && (m_boxes[row][j].color.r != 255 ||
+                            m_boxes[row][j].color.g != 255 ||
+                            m_boxes[row][j].color.b != 0)) {
+            row--;
+        }
+        if (row != SIZE - 1) {
+            Color tempColor = m_boxes[SIZE - 1][j].color;
+            m_boxes[SIZE - 1][j].setColor(m_boxes[row][j].color);
+            m_boxes[row][j].setColor(tempColor);
+        }
+    }
+
+    // Get the pattern of the bottom row
+    std::vector<bool> pattern;
+    for (int j = 0; j < SIZE; j++) {
+        pattern.push_back(m_boxes[SIZE - 1][j].color == Color::yellow);
+    }
+    return pattern;
+}
+
+
+bool BoxScene::validPattern(std::vector<bool> pattern) {
+    // Check if the bottom row has a valid combination
+    std::vector<Color> colors(SIZE);
+    for (int i = 0; i < 7; i++) {
+        bool test_validity = true;
+        for (int j = 0; j < 5; j++) {
+            if (pattern[j] != m_valids[i][j]) {
+                test_validity = false;
+                break;
+            }
+        }
+        if (test_validity) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void BoxScene::generateValidPattern(){
+    std::vector<bool> pattern = chaseYellowBoxes();
+    while (!validPattern(pattern)) {
+        randomiseYellowBoxes();
+        pattern = chaseYellowBoxes();
     }
 }
 
@@ -88,10 +133,10 @@ void BoxScene::animate() {
         m_renderer.render(m_scene, m_camera);
     });
 }
-
 void BoxScene::run() {
     createBoxes();
-    changeBoxColors();
+    randomiseYellowBoxes();
+    setBoard();
     animate();
 }
 

@@ -12,8 +12,10 @@ class BoxScene {
 public:
     BoxScene();
     void run();
+    std::vector<bool> chaseYellowBoxes();
     bool checkWin();
-
+    bool validPattern(std::vector<bool> pattern);
+    void generateValidPattern();
     int moves = 0;
     const int SIZE = 5;
 
@@ -30,12 +32,18 @@ private:
     std::uniform_int_distribution<> m_dis;
     MyMouseListener m_mouseListener;
     std::shared_ptr<Mesh> mesh;
-    Color color;
-
+    std::vector<std::vector<bool>> m_valids = {
+            {true, true, true, false, false},
+            {true, true, false, true, true},
+            {true, false, true, true, false},
+            {true, false, false, false, true},
+            {false, true, true, false, true},
+            {false, true, false, true, false},
+            {false, false, true, true, true}
+    };
     Vector2 getBoxAtPosition(Vector2 pos);
-
     void createBoxes();
-    void changeBoxColors();
+    void randomiseYellowBoxes();
     void toggle(Vector2 pos);
     void animate();
 
