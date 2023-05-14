@@ -1,5 +1,7 @@
 #include "gridScene.h"
 #include "mouseEvent.h"
+#include "keyListener.h"
+#include "threepp/renderers/TextHandle.hpp"
 #include <iostream>
 using namespace threepp;
 
@@ -73,7 +75,11 @@ void BoxScene::generateValidPattern() {
 
 
 void BoxScene::animate() {
+    m_canvas.addKeyListener(&m_keyListener);
     m_canvas.animate([&](float dt) {
+        if (m_keyListener.onResetPressed()){
+            generateValidPattern();
+        }
         if (m_mouseListener.mouseDown) {
             m_mouseListener.mouseDown = false;
             moves++;
@@ -82,11 +88,12 @@ void BoxScene::animate() {
                 toggle(index);
             }
             if (checkWin()) {
-                std::cout << "Congratulations, you won in " << moves << " moves!" << std::endl;
-                exit(0);
+                m_renderer.enableTextRendering();
+                m_renderer.textHandle("Congratulation!! press (r) to start a new game");
             }
         }
-
+        m_renderer.enableTextRendering();
+        m_renderer.textHandle("press (r) to restart");
         m_renderer.render(m_scene, m_camera);
     });
 }
@@ -156,7 +163,7 @@ bool BoxScene::checkWin() {
             }
         }
     }
-
     return true;
+
 }
 

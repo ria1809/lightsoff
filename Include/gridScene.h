@@ -5,6 +5,7 @@
 #include <random>
 #include "Box.h"
 #include "mouseEvent.h"
+#include "keyListener.h"
 #include "threepp/threepp.hpp"
 using namespace threepp;
 
@@ -30,6 +31,7 @@ private:
     std::mt19937 m_gen;
     std::uniform_int_distribution<> m_dis;
     MyMouseListener m_mouseListener;
+    MyKeyListener m_keyListener;
     std::shared_ptr<Mesh> mesh;
     std::vector<std::vector<bool>> m_valids = {
             {true, true, true, false, false},
