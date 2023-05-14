@@ -1,4 +1,4 @@
-#include "gridScene.h"
+#include "gridScene.hpp"
 #include "mouseEvent.h"
 #include "keyListener.h"
 #include "threepp/renderers/TextHandle.hpp"

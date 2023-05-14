@@ -1,6 +1,6 @@
 
-#ifndef LIGHTSOFF_GRIDSCENE_H
-#define LIGHTSOFF_GRIDSCENE_H
+#ifndef LIGHTSOFF_GRIDSCENE_HPP
+#define LIGHTSOFF_GRIDSCENE_HPP
 #include <vector>
 #include <random>
 #include "Box.h"
@@ -50,4 +50,4 @@ private:
 
 };
 
-#endif //LIGHTSOFF_GRIDSCENE_H
+#endif //LIGHTSOFF_GRIDSCENE_HPP
