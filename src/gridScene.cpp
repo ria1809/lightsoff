@@ -49,67 +49,27 @@ void BoxScene::createBoxes() {
     }
 }
 
+void BoxScene::generateValidPattern() {
+    int random = math::randomInRange(0, 6);
 
-void BoxScene::randomiseYellowBoxes() {
-    // Generate random box colors
+    std::vector<bool> pattern = m_valids[random];
+
     for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            int num = math::randomInRange(0, 1);
-            if (num == 1) {
-                m_boxes[i][j].setColor(Color::yellow);
-            } else {
-                m_boxes[i][j].setColor(Color::white);
-            }
-        }
-    }
-}
-std::vector<bool> BoxScene::chaseYellowBoxes() {
-    // Find and swap yellow boxes in each column
-    for (int j = 0; j < SIZE; j++) {
-        auto it = std::find_if(m_boxes.begin(), m_boxes.end(),
-                               [j](const auto& column) {
-                                   return column[j].color == Color::yellow;
-                               });
-        if (it != m_boxes.end()) {
-            int row = SIZE - 1;
-            std::swap(it->at(j), m_boxes[row][j]);
+        if (pattern[i]) {
+            m_boxes[4][i].setColor(Color::yellow);
         }
     }
 
-    // Get the pattern of the bottom row
-    std::vector<bool> pattern;
-    for (int j = 0; j < SIZE; j++) {
-        pattern.push_back(m_boxes[SIZE - 1][j].color == Color::yellow);
-    }
-    return pattern;
-}
+    for (int i = 0; i < 500; i++) {
+        int j = math::randomInRange(0, 24);
 
+        int x = j % SIZE; // SIZE is 5
+        int y = (j - x) / SIZE; // SIZE is 5
 
-
-bool BoxScene::validPattern(std::vector<bool> pattern) {
-    // Check if the bottom row has a valid combination
-    std::vector<Color> colors(SIZE);
-    for (int i = 0; i < 7; i++) {
-        bool test_validity = true;
-        for (int j = 0; j < 5; j++) {
-            if (pattern[j] != m_valids[i][j]) {
-                test_validity = false;
-                break;
-            }
-        }
-        if (test_validity) {
-            return true;
-        }
-    }
-    return false;
-}
-
-void BoxScene::generateValidPattern(){
-    std::vector<bool> pattern = chaseYellowBoxes();
-    while (!validPattern(pattern)) {
-        randomiseYellowBoxes();
+        toggle({x, y});
     }
 }
+
 
 
 void BoxScene::animate() {
@@ -132,7 +92,6 @@ void BoxScene::animate() {
 }
 void BoxScene::run() {
     createBoxes();
-    randomiseYellowBoxes();
     generateValidPattern();
     animate();
 }

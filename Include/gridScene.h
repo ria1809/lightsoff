@@ -12,9 +12,7 @@ class BoxScene {
 public:
     BoxScene();
     void run();
-    std::vector<bool> chaseYellowBoxes();
     bool checkWin();
-    bool validPattern(std::vector<bool> pattern);
     void generateValidPattern();
     const int SIZE = 5;
     int moves = 0;
@@ -44,7 +42,6 @@ private:
     };
     Vector2 getBoxAtPosition(Vector2 pos);
     void createBoxes();
-    void randomiseYellowBoxes();
     void toggle(Vector2 pos);
     void animate();
 
