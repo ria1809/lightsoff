@@ -64,18 +64,15 @@ void BoxScene::randomiseYellowBoxes() {
     }
 }
 std::vector<bool> BoxScene::chaseYellowBoxes() {
-    // Chase down yellow boxes to the bottom row
+    // Find and swap yellow boxes in each column
     for (int j = 0; j < SIZE; j++) {
-        int row = SIZE - 1;
-        while (row >= 0 && (m_boxes[row][j].color.r != 255 ||
-                            m_boxes[row][j].color.g != 255 ||
-                            m_boxes[row][j].color.b != 0)) {
-            row--;
-        }
-        if (row != SIZE - 1) {
-            Color tempColor = m_boxes[SIZE - 1][j].color;
-            m_boxes[SIZE - 1][j].setColor(m_boxes[row][j].color);
-            m_boxes[row][j].setColor(tempColor);
+        auto it = std::find_if(m_boxes.begin(), m_boxes.end(),
+                               [j](const auto& column) {
+                                   return column[j].color == Color::yellow;
+                               });
+        if (it != m_boxes.end()) {
+            int row = SIZE - 1;
+            std::swap(it->at(j), m_boxes[row][j]);
         }
     }
 
@@ -86,6 +83,7 @@ std::vector<bool> BoxScene::chaseYellowBoxes() {
     }
     return pattern;
 }
+
 
 
 bool BoxScene::validPattern(std::vector<bool> pattern) {
@@ -110,7 +108,6 @@ void BoxScene::generateValidPattern(){
     std::vector<bool> pattern = chaseYellowBoxes();
     while (!validPattern(pattern)) {
         randomiseYellowBoxes();
-        pattern = chaseYellowBoxes();
     }
 }
 
@@ -136,7 +133,7 @@ void BoxScene::animate() {
 void BoxScene::run() {
     createBoxes();
     randomiseYellowBoxes();
-    setBoard();
+    generateValidPattern();
     animate();
 }
 

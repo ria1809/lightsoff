@@ -16,8 +16,9 @@ public:
     bool checkWin();
     bool validPattern(std::vector<bool> pattern);
     void generateValidPattern();
-    int moves = 0;
     const int SIZE = 5;
+    int moves = 0;
+
 
 private:
     Canvas m_canvas;
