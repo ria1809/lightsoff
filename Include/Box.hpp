@@ -1,9 +1,7 @@
-//
-// Created by Ria Sharma on 13/05/23.
-//
 
-#ifndef LIGHTSOFF_BOX_H
-#define LIGHTSOFF_BOX_H
+
+#ifndef LIGHTSOFF_BOX_HPP
+#define LIGHTSOFF_BOX_HPP
 #include "threepp/threepp.hpp"
 
 using namespace threepp;
@@ -28,4 +26,4 @@ struct Box {
         }
     }
 };
-#endif //LIGHTSOFF_BOX_H
+#endif //LIGHTSOFF_BOX_HPP

@@ -1,7 +1,7 @@
 
 
-#ifndef LIGHTSOFF_KEYLISTENER_H
-#define LIGHTSOFF_KEYLISTENER_H
+#ifndef LIGHTSOFF_KEYLISTENER_HPP
+#define LIGHTSOFF_KEYLISTENER_HPP
 
 #include "threepp/threepp.hpp"
 #include <iostream>
@@ -31,4 +31,4 @@ struct MyKeyListener: KeyListener {
     };
 };
 
-#endif //LIGHTSOFF_KEYLISTENER_H
+#endif //LIGHTSOFF_KEYLISTENER_HPP

@@ -3,9 +3,9 @@
 #define LIGHTSOFF_GRIDSCENE_HPP
 #include <vector>
 #include <random>
-#include "Box.h"
-#include "mouseEvent.h"
-#include "keyListener.h"
+#include "Box.hpp"
+#include "mouseEvent.hpp"
+#include "keyListener.hpp"
 #include "threepp/threepp.hpp"
 using namespace threepp;
 

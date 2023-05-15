@@ -1,12 +1,10 @@
-//
-// Created by Ria Sharma on 12/05/23.
-//
 
-#ifndef LIGHTSOFF_MOUSEEVENT_H
-#define LIGHTSOFF_MOUSEEVENT_H
+
+#ifndef LIGHTSOFF_MOUSEEVENT_HPP
+#define LIGHTSOFF_MOUSEEVENT_HPP
 
 #include "threepp/threepp.hpp"
-#include "mouseEvent.h"
+#include "mouseEvent.hpp"
 
 using namespace threepp;
 
@@ -40,4 +38,4 @@ private:
     Canvas& canvas;
 };
 
-#endif //LIGHTSOFF_MOUSEEVENT_H
+#endif //LIGHTSOFF_MOUSEEVENT_HPP
