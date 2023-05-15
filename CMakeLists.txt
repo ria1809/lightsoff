@@ -5,6 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 find_package(threepp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
+
+add_subdirectory(src)
+
+add_executable(lightsoff main.cpp)
+target_link_libraries(lightsoff PUBLIC gamelib imgui::imgui)
 include(FetchContent)
 FetchContent_Declare(
         Catch2
@@ -15,7 +20,3 @@ FetchContent_MakeAvailable(Catch2)
 
 enable_testing()
 add_subdirectory(tests)
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(include)
-add_executable(lightsoff main.cpp src/gridScene.cpp)
-target_link_libraries(lightsoff PRIVATE threepp::threepp imgui::imgui)
