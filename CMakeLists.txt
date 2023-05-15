@@ -15,6 +15,7 @@ FetchContent_MakeAvailable(Catch2)
 
 enable_testing()
 add_subdirectory(tests)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(include)
-add_executable(lightsoff main.cpp src/gridScene.cpp Include/gridScene.hpp Include/gridScene.hpp Include/Box.h Include/Box.h Include/keyListener.h)
+add_executable(lightsoff main.cpp src/gridScene.cpp)
 target_link_libraries(lightsoff PRIVATE threepp::threepp imgui::imgui)
